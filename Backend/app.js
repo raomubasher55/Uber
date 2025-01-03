@@ -2,39 +2,38 @@ const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./db/db');
 const userRoutes = require('./routes/user.routes');
 const ApiError = require('./utils/ApiError');
-const httpStatus = require('http-status');
+const { default: status } = require("http-status");
+const errorHandler = require('./middlewares/errorHandler.middleware');
 const app = express();
 
 connectDB();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-app.get('/' , (req ,res)=>{
-    res.send('Hello world')
+// Routes
+app.get('/', (req, res) => {
+    res.send('Hello world');
 });
 
-app.use((err, req, res, next) => {
-    if (err instanceof ApiError) {
-        return res.status(err.statusCode).json({ error: err.message });
-    }
-    // Handle other types of errors
-    res.status(500).json({ error: 'Internal Server Error' });
-});
-
-app.use('/users' , userRoutes);
 
 
+app.use('/users', userRoutes);
 
 
-
-// send back a 404 error for any unknown api request
+// 404 Not Found error handler
 app.use((req, res, next) => {
-    next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
-  });
+    next(new ApiError(status.NOT_FOUND, 'Route  Not found'));
+});
+
+
+app.use(errorHandler); 
+
 
 module.exports = app;
