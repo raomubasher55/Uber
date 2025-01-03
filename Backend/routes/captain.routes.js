@@ -4,7 +4,9 @@ const captainController = require("../controllers/captain.controller");
 const {
   validateCaptainSignup,
   validateRequest,
+  validateCaptainLogin,
 } = require("../validators/captain.validator");
+const { authCaptain } = require("../middlewares/auth.middleware");
 
 router
   .route("/register")
@@ -13,8 +15,19 @@ router
     validateRequest,
     captainController.createCaptain
   );
-// router.route('/login').post(captainController.login);
-// router.route('/profile').get(captainController.captainProfile);
-// router.route('/logout').post(captainController.logout);
 
+router
+    .route("/login")
+    .post(validateCaptainLogin, validateRequest, captainController.loginCaptain);
+
+
+router
+  .route("/profile")
+  .get(authCaptain ,  captainController.getCaptain);
+
+router
+    .route("/logout")
+    .get(authCaptain, captainController.logout);
+
+    
 module.exports = router;

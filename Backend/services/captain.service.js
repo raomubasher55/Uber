@@ -1,5 +1,6 @@
 const Captain = require('../models/captain.model');
-const httpStatus = require('http-status');
+const {default : httpStatus} = require('http-status');
+const ApiError = require('../utils/ApiError');
 
 
 /**
@@ -20,23 +21,24 @@ exports.createCaptain = async (captainData) => {
 };
 
 /**
- * Get captain by id
- * @param {ObjectId} captainId
- * @returns {Promise<Object>}
+ * Login a Captain
+ * @param {string} email - User email
+ * @param {string} password - User password
+ * @returns {Promise<Captain>}
  */
-exports.getCaptain = async (captainId) => {
-    return await Captain.findById(captainId);
-}
+exports.loginCaptainWithEmailAndPassword = async (email, password) => {
+    const captain = await Captain.findOne({ email }).select('+password');
+    if (!captain) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Invalid credentials');
+    }
+    const isPasswordMatch = await captain.comparePassword(password);
+    if (!isPasswordMatch) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid credentials');
+    }
+    return captain;
+  };
+  
 
-
-/**
- * Get captains
- * @returns {Promise<Object>}
- */
-
-exports.getCaptains = async () => {
-    return await Captain.find();
-}
 
 
 /**
@@ -67,6 +69,4 @@ exports.deleteCaptain = async (captainId) => {
     return captain;
 }
 
-exports.getCaptainByEmail = async (email) => {
-    return await Captain.findOne({ email });
-}
+

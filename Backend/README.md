@@ -299,3 +299,92 @@ Status Code: 401 Unauthorized
   "error": "Invalid credentials"
 }
 ```
+
+
+
+### `GET /captains/profile`
+
+#### Description
+Fetches the profile information of the authenticated captain.
+
+#### Authentication
+This endpoint requires a valid JWT token for authentication. The token should be provided in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+#### Response
+- **Status Code:** 200 OK
+- **Content:** JSON object containing the captain's profile information.
+
+#### Example Response
+```json
+{
+  "_id": "captain_id",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "socketId": null,
+  "status": "inactive",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  },
+  "location": {
+    "lat": null,
+    "lng": null
+  }
+}
+```
+
+### Error Responses
+Status Code: 401 Unauthorized
+`Body (Invalid Token):`
+```json
+{
+  "message": "Unauthorized: Invalid token"
+}
+```
+
+`Body (No Token Provided):`
+```json
+{
+  "message": "Unauthorized: No token provided"
+}
+```
+
+### `GET /captains/logout`
+
+#### Description
+Logs out the authenticated captain by clearing the authentication token and adding it to the blacklist.
+
+#### Authentication
+This endpoint requires a valid JWT token for authentication. The token should be provided in the `Authorization` header as a Bearer token or in the `token` cookie.
+
+#### Response
+- **Status Code:** 200 OK
+- **Content:** A message indicating successful logout.
+
+#### Example Response
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+### Error Responses
+Status Code: 401 Unauthorized
+`Body (Invalid Token):`
+```json
+{
+  "message": "Unauthorized: Invalid token"
+}
+```
+
+`Body (No Token Provided):`
+```json
+{
+  "message": "Unauthorized: No token provided"
+}
+```

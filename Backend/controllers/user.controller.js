@@ -8,6 +8,7 @@ exports.registerUser = catchAsync(async (req, res) => {
   try {
     const user = await userService.createUser(req.body);
     const token = user.generateAuthToken();
+    res.cookie("token", token);
     res.status(status.OK).json({ user, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
