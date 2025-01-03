@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./db/db');
 const userRoutes = require('./routes/user.routes');
+const captainRoutes = require('./routes/captain.routes');
 const ApiError = require('./utils/ApiError');
 const { default: status } = require("http-status");
 const errorHandler = require('./middlewares/errorHandler.middleware');
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/users', userRoutes);
+app.use('/captains', captainRoutes);
 
 
 // 404 Not Found error handler

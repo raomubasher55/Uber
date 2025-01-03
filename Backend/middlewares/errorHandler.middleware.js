@@ -11,10 +11,10 @@ const errorHandler = (err, req, res, next) => {
   }
   // Handle other types of errors (e.g., unexpected server errors)
   return res.status(500).json({
+    error: err.message,
     status: 'error',
     statusCode: 500,
     message: 'Internal Server Error',
   });
 };
-
 module.exports = errorHandler;
